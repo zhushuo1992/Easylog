@@ -3,7 +3,7 @@
  *
  *  Created on: 2018年12月7日
  *      Author: Administrator
- *      支持非C++11,支持日志级别，支持留式日志,支持printf，不需要定义，只需要包含头文件
+ *      支持非C++11,支持日志级别，支持流式日志,支持printf，不需要定义，只需要包含头文件
  *      感谢原作者sollyu
  *      by zhushuo
  */
@@ -22,7 +22,7 @@
 	#include <iostream>
 	#include "Easylog.h"
 
-	ELOGI("i'm %s", "sollyu");          // 输出 INFO (只有 LOGI 不会打印所在行)
+	ELOGI("i'm %s", "zhushuo");          // 输出 INFO (只有 LOGI 不会打印所在行)
 	ELOGE("I'm " << "sollyu");          // 输出 ERROR (会打印所在行)
 	ELOG_DEBUG("i'm %s", "sollyu");     // 输出 DEBUG (会打印所在行)
 	EasyLog::GetInstance()->WriteLog(EasyLog::LOG_DEBUG, "i'm %s", "sollyu");
@@ -46,7 +46,11 @@
 #include <time.h>
 
 #ifndef EASY_LOG_FILE_NAME
-#  define EASY_LOG_FILE_NAME			"EasyLog.log"   /** 日志的文件名 */
+#  define EASY_LOG_FILE_NAME			"EasyLog.log"   /** 日志的文件名 ，可以用 ./log/EasyLog.log实现相对路径*/
+#endif
+
+#ifndef EASY_LOG_FILE_NAME_DATE
+#  define EASY_LOG_FILE_NAME_DATE		1            /** 1表示使用日期作为文件名 */
 #endif
 
 #ifndef EASY_LOG_LINE_BUFF_SIZE
@@ -200,11 +204,20 @@ public:
 private:
     EasyLog(void)
 	{
+#if defined EASY_LOG_FILE_NAME_DATE && EASY_LOG_FILE_NAME_DATE == 1
+#if defined EASY_LOG_COVER_LOG && EASY_LOG_COVER_LOG == 0
+		m_fileOut.open((DateStamp()+".log").c_str(), std::ofstream::out);
+#else
+		m_fileOut.open((DateStamp()+".log").c_str(), std::ofstream::out | std::ofstream::app);
+#endif
+#else
 #if defined EASY_LOG_COVER_LOG && EASY_LOG_COVER_LOG == 0
 		m_fileOut.open(EASY_LOG_FILE_NAME, std::ofstream::out);
 #else
 		m_fileOut.open(EASY_LOG_FILE_NAME, std::ofstream::out | std::ofstream::app);
 #endif
+#endif
+
 		WriteLog("------------------ LOG SYSTEM START ------------------\n", EasyLog::LOG_INFO);
 	}
     virtual ~EasyLog(void)
