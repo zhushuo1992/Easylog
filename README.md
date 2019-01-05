@@ -1,8 +1,12 @@
 # Easylog
-An Easy to Use C++ Header-only Log Project, C++11 is not necessary
+## An Easy to Use C++ Header-only Log Project, C++11 is not necessary
 
 
-不需要c++11，支持流式日志、日志级别、日志打印，支持printf样式，不需要定义，只需要包含头文件的轻量日志系统
+## 不需要c++11，支持流式日志、日志级别、日志打印，支持printf样式，不需要定义，只需要包含头文件的轻量日志系统
+
+
+思路请参考本人博客： https://blog.csdn.net/zhushuo1992/article/details/85877075
+
 
 Thanks:
 
